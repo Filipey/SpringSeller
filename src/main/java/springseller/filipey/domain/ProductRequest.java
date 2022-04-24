@@ -1,4 +1,4 @@
-package springseller.filipey.domain.entity;
+package springseller.filipey.domain;
 
 public class ProductRequest {
 
