@@ -1,10 +1,25 @@
 package springseller.filipey.domain;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "PRODUCT_REQUEST")
 public class ProductRequest {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "REQUEST_ID")
     private Request request;
+
+    @ManyToOne
+    @JoinColumn(name = "PRODUCT_ID")
     private Product product;
+
+    @Column(name = "QUANTITY")
     private Integer quantity;
 
     public Long getId() {

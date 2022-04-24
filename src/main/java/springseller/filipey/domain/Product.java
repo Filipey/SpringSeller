@@ -1,11 +1,21 @@
 package springseller.filipey.domain;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 
+@Entity
+@Table(name = "PRODUCT")
 public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
     private Long id;
+
+    @Column(name = "DESCRIPTION")
     private String description;
+
+    @Column(name = "PRICE")
     private BigDecimal price;
 
     public Long getId() {

@@ -1,15 +1,32 @@
 package springseller.filipey.domain;
 
-import sun.util.resources.LocaleData;
-
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
+import java.util.Set;
+
+@Entity
+@Table(name = "REQUEST")
 public class Request {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "CLIENT_ID")
     private Client client;
-    private LocaleData requestDate;
+
+    @Column(name = "REQUEST_DATE")
+    private LocalDate requestDate;
+
+    @Column(name = "AMOUNT", length = 20, precision = 2)
     private BigDecimal amount;
+
+    @OneToMany(mappedBy = "request")
+    private Set<ProductRequest> products;
 
     public Long getId() {
         return id;
@@ -19,11 +36,11 @@ public class Request {
         this.id = id;
     }
 
-    public LocaleData getRequestDate() {
+    public LocalDate getRequestDate() {
         return requestDate;
     }
 
-    public void setRequestDate(LocaleData requestDate) {
+    public void setRequestDate(LocalDate requestDate) {
         this.requestDate = requestDate;
     }
 
@@ -41,5 +58,13 @@ public class Request {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public Set<ProductRequest> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<ProductRequest> products) {
+        this.products = products;
     }
 }
