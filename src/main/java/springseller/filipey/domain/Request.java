@@ -22,7 +22,7 @@ public class Request {
     @Column(name = "REQUEST_DATE")
     private LocalDate requestDate;
 
-    @Column(name = "AMOUNT", length = 20, precision = 2)
+    @Column(name = "AMOUNT", precision = 20, scale = 2)
     private BigDecimal amount;
 
     @OneToMany(mappedBy = "request")
@@ -66,5 +66,14 @@ public class Request {
 
     public void setProducts(Set<ProductRequest> products) {
         this.products = products;
+    }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "id=" + id +
+                ", requestDate=" + requestDate +
+                ", amount=" + amount +
+                '}';
     }
 }
