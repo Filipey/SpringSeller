@@ -1,8 +1,16 @@
 package springseller.filipey.domain.entity;
 
+import javax.persistence.*;
+
+@Entity
 public class Client {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "name", length = 100)
     private String name;
 
     public Client(String name) {
