@@ -1,17 +1,22 @@
-package springseller.filipey.domain.entity;
+package springseller.filipey.domain;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
+@Table(name = "CLIENT")
 public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "name", length = 100)
+    @Column(name = "NAME")
     private String name;
+
+    @OneToMany(mappedBy = "client")
+    private Set<Request> requests;
 
     public Client(String name) {
         this.name = name;
@@ -23,6 +28,14 @@ public class Client {
     }
 
     public Client() {
+    }
+
+    public Set<Request> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(Set<Request> requests) {
+        this.requests = requests;
     }
 
     public String getName() {
