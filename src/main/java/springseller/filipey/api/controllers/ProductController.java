@@ -12,11 +12,14 @@ import springseller.filipey.repositories.ProductsRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/v1/products")
 public class ProductController {
 
-    @Autowired
-    private ProductsRepository productsRepository;
+    private final ProductsRepository productsRepository;
+
+    public ProductController(ProductsRepository productsRepository) {
+        this.productsRepository = productsRepository;
+    }
 
     @GetMapping("/{id}")
     public Product getProductById( @PathVariable Long id ) {

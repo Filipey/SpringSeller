@@ -13,11 +13,14 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/clients")
+@RequestMapping("/api/v1/clients")
 public class ClientController {
 
-    @Autowired
-    private ClientRepository clientsRepository;
+    private final ClientRepository clientsRepository;
+
+    public ClientController(ClientRepository clientsRepository) {
+        this.clientsRepository = clientsRepository;
+    }
 
     @GetMapping("/{id}")
     public Client getClientById(@PathVariable Long id) {
