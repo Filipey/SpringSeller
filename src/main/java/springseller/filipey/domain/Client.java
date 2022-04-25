@@ -1,5 +1,7 @@
 package springseller.filipey.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -15,6 +17,10 @@ public class Client {
     @Column(name = "NAME")
     private String name;
 
+    @Column(name = "CPF", length = 11)
+    private String cpf;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "client")
     private Set<Request> requests;
 
@@ -52,6 +58,14 @@ public class Client {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     @Override
