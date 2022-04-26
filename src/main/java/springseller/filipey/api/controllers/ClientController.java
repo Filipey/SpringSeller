@@ -1,69 +1,52 @@
 package springseller.filipey.api.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import springseller.filipey.domain.Client;
-import springseller.filipey.repositories.ClientRepository;
+import springseller.filipey.services.ClientService;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+
 
 
 @RestController
 @RequestMapping("/api/v1/clients")
 public class ClientController {
 
-    private final ClientRepository clientsRepository;
+    private final ClientService clientService;
 
-    public ClientController(ClientRepository clientsRepository) {
-        this.clientsRepository = clientsRepository;
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     @GetMapping("/{id}")
     public Client getClientById(@PathVariable Long id) {
-        return clientsRepository
-                .findById(id)
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found"));
+        return clientService.getClientById(id);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     public Client insert(@RequestBody Client client) {
-        return clientsRepository.save(client);
+        return clientService.insert(client);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        clientsRepository.findById(id)
-                .map(client -> {
-                    clientsRepository.delete(client);
-                    return client;
-                })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found"));
+        clientService.delete(id);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void update(@PathVariable Long id, @RequestBody Client client) {
-        clientsRepository.findById(id)
-                .map(existingClient -> {
-                    client.setId(existingClient.getId());
-                    clientsRepository.save(client);
-                    return client;
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found"));
+        clientService.update(id, client);
     }
 
     @GetMapping
     public List<Client> find( Client filteredClient ) {
-        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase().withStringMatcher( ExampleMatcher.StringMatcher.CONTAINING );
-        Example example = Example.of(filteredClient, matcher);
-
-        return clientsRepository.findAll(example);
+        return clientService.find(filteredClient);
     }
 
 }
