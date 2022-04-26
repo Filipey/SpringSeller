@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -33,6 +34,6 @@ public class Request {
     private BigDecimal amount;
 
     @OneToMany(mappedBy = "request")
-    private Set<ProductRequest> products;
+    private List<ProductRequest> products;
 
 }
