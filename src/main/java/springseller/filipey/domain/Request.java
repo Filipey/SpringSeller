@@ -1,11 +1,19 @@
 package springseller.filipey.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import java.util.List;
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "REQUEST")
 public class Request {
@@ -26,54 +34,6 @@ public class Request {
     private BigDecimal amount;
 
     @OneToMany(mappedBy = "request")
-    private Set<ProductRequest> products;
+    private List<ProductRequest> products;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDate getRequestDate() {
-        return requestDate;
-    }
-
-    public void setRequestDate(LocalDate requestDate) {
-        this.requestDate = requestDate;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public Set<ProductRequest> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<ProductRequest> products) {
-        this.products = products;
-    }
-
-    @Override
-    public String toString() {
-        return "Request{" +
-                "id=" + id +
-                ", requestDate=" + requestDate +
-                ", amount=" + amount +
-                '}';
-    }
 }
