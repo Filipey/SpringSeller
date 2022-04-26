@@ -21,7 +21,7 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientsRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Client getClientById(Long id) {
         return clientsRepository
                 .findById(id)
@@ -30,11 +30,13 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public Client insert(Client client) {
         return clientsRepository.save(client);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         clientsRepository.findById(id)
                 .map(client -> {
@@ -45,6 +47,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public void update(Long id, Client client) {
         clientsRepository.findById(id)
                 .map(existingClient -> {
@@ -55,6 +58,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Client> find(Client filteredClient) {
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase().withStringMatcher( ExampleMatcher.StringMatcher.CONTAINING );
         Example example = Example.of(filteredClient, matcher);

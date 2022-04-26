@@ -22,7 +22,6 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus()
     public Client getClientById(@PathVariable Long id) {
         return clientService.getClientById(id);
     }
