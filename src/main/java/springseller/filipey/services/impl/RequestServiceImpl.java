@@ -1,16 +1,12 @@
 package springseller.filipey.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.server.ResponseStatusException;
-import springseller.filipey.api.dto.ProductRequestDTO;
-import springseller.filipey.api.dto.ProductRequestInfoDTO;
-import springseller.filipey.api.dto.RequestDTO;
-import springseller.filipey.api.dto.RequestInfoDTO;
+import springseller.filipey.api.dto.*;
 import springseller.filipey.api.exception.ObjectNotFoundException;
+import springseller.filipey.api.exception.RequestNotFoundException;
 import springseller.filipey.domain.Client;
 import springseller.filipey.domain.Product;
 import springseller.filipey.domain.ProductRequest;
@@ -27,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,16 +80,18 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Request> getFullRequest(Long id) {
         return requestRepository.findByIdFetchProducts(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RequestInfoDTO getById(Long id) {
         return getFullRequest(id)
                 .map(p -> infoDtoToEntity(p))
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Request not found"));
+                        new RequestNotFoundException());
     }
 
     private List<ProductRequestInfoDTO> productsRequestsToDto(List<ProductRequest> productRequests) {
@@ -123,5 +120,21 @@ public class RequestServiceImpl implements RequestService {
                 .status(request.getStatus().name())
                 .products(productsRequestsToDto(request.getProducts()))
                 .build();
+    }
+
+    private void setStatus(Long id, RequestStatus requestStatus) {
+        requestRepository
+                .findById(id)
+                .map( p -> {
+                    p.setStatus(requestStatus);
+                    return requestRepository.save(p);
+                } ).orElseThrow(() -> new RequestNotFoundException());
+    }
+
+    @Override
+    @Transactional
+    public void updateStatus(Long id, RequestStatusUpdateDTO dto) {
+        String newStatus = dto.getNewStatus();
+        setStatus(id, RequestStatus.valueOf(newStatus));
     }
 }
