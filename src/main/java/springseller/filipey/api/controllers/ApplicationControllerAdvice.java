@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import springseller.filipey.api.ApiErrors;
 import springseller.filipey.api.exception.ObjectNotFoundException;
+import springseller.filipey.api.exception.RequestNotFoundException;
 
 @RestControllerAdvice
 public class ApplicationControllerAdvice {
@@ -16,5 +17,11 @@ public class ApplicationControllerAdvice {
         String errorMessage = exception.getMessage();
 
         return new ApiErrors(errorMessage);
+    }
+
+    @ExceptionHandler(RequestNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErrors handleRequestNotFoundException(RequestNotFoundException exception) {
+        return new ApiErrors(exception.getMessage());
     }
 }
