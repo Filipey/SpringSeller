@@ -1,10 +1,15 @@
 package springseller.filipey.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.server.ResponseStatusException;
 import springseller.filipey.api.dto.ProductRequestDTO;
+import springseller.filipey.api.dto.ProductRequestInfoDTO;
 import springseller.filipey.api.dto.RequestDTO;
+import springseller.filipey.api.dto.RequestInfoDTO;
 import springseller.filipey.api.exception.ObjectNotFoundException;
 import springseller.filipey.domain.Client;
 import springseller.filipey.domain.Product;
@@ -17,7 +22,10 @@ import springseller.filipey.repositories.RequestRepository;
 import springseller.filipey.services.RequestService;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -72,5 +80,45 @@ public class RequestServiceImpl implements RequestService {
 
                     return productRequest;
                 }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Request> getFullRequest(Long id) {
+        return requestRepository.findByIdFetchProducts(id);
+    }
+
+    @Override
+    public RequestInfoDTO getById(Long id) {
+        return getFullRequest(id)
+                .map(p -> infoDtoToEntity(p))
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Request not found"));
+    }
+
+    private List<ProductRequestInfoDTO> productsRequestsToDto(List<ProductRequest> productRequests) {
+        if(CollectionUtils.isEmpty(productRequests)) {
+            return Collections.emptyList();
+        }
+
+        return productRequests.stream().map(
+                p -> ProductRequestInfoDTO
+                        .builder()
+                        .description(p.getProduct().getDescription())
+                        .unitPrice(p.getProduct().getPrice())
+                        .quantity(p.getQuantity())
+                        .build()
+        ).collect(Collectors.toList());
+    }
+
+    private RequestInfoDTO infoDtoToEntity(Request request) {
+        return RequestInfoDTO
+                .builder()
+                .id(request.getId())
+                .requestDate(request.getRequestDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                .cpf(request.getClient().getCpf())
+                .clientName(request.getClient().getName())
+                .amount(request.getAmount())
+                .products(productsRequestsToDto(request.getProducts()))
+                .build();
     }
 }
