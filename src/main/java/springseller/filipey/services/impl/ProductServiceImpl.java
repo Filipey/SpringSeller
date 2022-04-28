@@ -3,10 +3,9 @@ package springseller.filipey.services.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
+import springseller.filipey.api.exception.ProductNotFoundException;
 import springseller.filipey.domain.Product;
 import springseller.filipey.repositories.ProductsRepository;
 import springseller.filipey.services.ProductService;
@@ -25,7 +24,7 @@ public class ProductServiceImpl implements ProductService {
         return productsRepository
                 .findById(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+                        () -> new ProductNotFoundException());
     }
 
     @Override
@@ -41,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
                     productsRepository.delete(product);
                     return product;
                 }).orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+                        () -> new ProductNotFoundException());
     }
 
     @Override
@@ -53,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
                     productsRepository.save(product);
                     return product;
                 }).orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+                        () -> new ProductNotFoundException());
     }
 
     @Override
@@ -67,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
         Example example = Example.of(filteredProduct, matcher);
 
         if (productsRepository.findAll(example).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+            throw new ProductNotFoundException();
         }
 
         return productsRepository.findAll(example);
