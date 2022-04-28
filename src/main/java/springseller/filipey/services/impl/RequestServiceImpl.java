@@ -15,6 +15,7 @@ import springseller.filipey.domain.Client;
 import springseller.filipey.domain.Product;
 import springseller.filipey.domain.ProductRequest;
 import springseller.filipey.domain.Request;
+import springseller.filipey.domain.enums.RequestStatus;
 import springseller.filipey.repositories.ClientRepository;
 import springseller.filipey.repositories.ProductRequestRepository;
 import springseller.filipey.repositories.ProductsRepository;
@@ -53,6 +54,7 @@ public class RequestServiceImpl implements RequestService {
 
         List<ProductRequest> productRequests = toEntity(request, dto.getRequests());
         requestRepository.save(request);
+        request.setStatus(RequestStatus.ACCOMPLISHED);
 
         productRequestRepository.saveAll(productRequests);
         request.setProducts(productRequests);
@@ -118,6 +120,7 @@ public class RequestServiceImpl implements RequestService {
                 .cpf(request.getClient().getCpf())
                 .clientName(request.getClient().getName())
                 .amount(request.getAmount())
+                .status(request.getStatus().name())
                 .products(productsRequestsToDto(request.getProducts()))
                 .build();
     }

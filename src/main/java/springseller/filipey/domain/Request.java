@@ -3,6 +3,7 @@ package springseller.filipey.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import springseller.filipey.domain.enums.RequestStatus;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -32,6 +33,10 @@ public class Request {
 
     @Column(name = "AMOUNT", precision = 20, scale = 2)
     private BigDecimal amount;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private RequestStatus status;
 
     @OneToMany(mappedBy = "request")
     private List<ProductRequest> products;

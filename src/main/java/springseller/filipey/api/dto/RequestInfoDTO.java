@@ -18,5 +18,6 @@ public class RequestInfoDTO {
     private String clientName;
     private BigDecimal amount;
     private String requestDate;
+    private String status;
     private List<ProductRequestInfoDTO> products;
 }
