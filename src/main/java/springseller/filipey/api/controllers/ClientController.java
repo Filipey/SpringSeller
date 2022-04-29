@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import springseller.filipey.domain.Client;
 import springseller.filipey.services.ClientService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -28,7 +29,7 @@ public class ClientController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Client insert(@RequestBody Client client) {
+    public Client insert(@RequestBody @Valid Client client) {
         return clientService.insert(client);
     }
 
