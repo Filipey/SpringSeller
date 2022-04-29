@@ -14,12 +14,12 @@ import java.util.List;
 @NoArgsConstructor
 public class RequestDTO {
 
-    @NotNull(message = "Client id is required")
+    @NotNull(message = "{field.client-id.required}")
     private Long client;
 
-    @NotNull(message = "Amount field is required")
+    @NotNull(message = "{field.request-amount.required}")
     private BigDecimal amount;
 
-    @NotEmptyList(message = "Request can not be done without products")
+    @NotEmptyList(message = "{field.products-request.required}")
     private List<ProductRequestDTO> requests;
 }
