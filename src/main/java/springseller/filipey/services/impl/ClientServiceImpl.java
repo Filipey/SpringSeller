@@ -5,14 +5,12 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
+import springseller.filipey.api.exception.ClientNotFoundException;
 import springseller.filipey.domain.Client;
 import springseller.filipey.repositories.ClientRepository;
 import springseller.filipey.services.ClientService;
 
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +24,7 @@ public class ClientServiceImpl implements ClientService {
         return clientsRepository
                 .findById(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(NOT_FOUND, "Client not found"));
+                        () -> new ClientNotFoundException());
     }
 
     @Override
@@ -43,7 +41,7 @@ public class ClientServiceImpl implements ClientService {
                     clientsRepository.delete(client);
                     return client;
                 })
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Client not found"));
+                .orElseThrow(() -> new ClientNotFoundException());
     }
 
     @Override
@@ -54,7 +52,7 @@ public class ClientServiceImpl implements ClientService {
                     client.setId(existingClient.getId());
                     clientsRepository.save(client);
                     return client;
-                }).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Client not found"));
+                }).orElseThrow(() -> new ClientNotFoundException());
     }
 
     @Override

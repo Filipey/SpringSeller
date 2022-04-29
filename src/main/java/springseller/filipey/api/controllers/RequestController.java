@@ -7,6 +7,8 @@ import springseller.filipey.api.dto.RequestInfoDTO;
 import springseller.filipey.api.dto.RequestStatusUpdateDTO;
 import springseller.filipey.services.RequestService;
 
+import javax.validation.Valid;
+
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -21,7 +23,7 @@ public class RequestController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Long save( @RequestBody RequestDTO dto ) {
+    public Long save( @RequestBody @Valid RequestDTO dto ) {
         return requestService.save(dto).getId();
     }
 
@@ -32,7 +34,7 @@ public class RequestController {
 
     @PatchMapping("{id}")
     @ResponseStatus(NO_CONTENT)
-    public void updateStatus( @PathVariable Long id, @RequestBody RequestStatusUpdateDTO dto ) {
+    public void updateStatus( @PathVariable Long id, @RequestBody @Valid RequestStatusUpdateDTO dto ) {
         requestService.updateStatus(id, dto);
     }
 }
