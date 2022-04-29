@@ -41,7 +41,7 @@ public class ClientController {
 
     @PutMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public void update(@PathVariable Long id, @RequestBody Client client) {
+    public void update(@PathVariable Long id, @RequestBody @Valid Client client) {
         clientService.update(id, client);
     }
 

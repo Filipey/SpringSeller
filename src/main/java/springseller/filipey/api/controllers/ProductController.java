@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import springseller.filipey.domain.Product;
 import springseller.filipey.services.impl.ProductServiceImpl;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -27,7 +28,7 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Product insert( @RequestBody Product product ) {
+    public Product insert( @RequestBody @Valid Product product ) {
         return productService.insert(product);
     }
 
@@ -39,7 +40,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public void update( @PathVariable Long id, @RequestBody Product product ) {
+    public void update( @PathVariable Long id, @RequestBody @Valid Product product ) {
         productService.update(id, product);
     }
 
