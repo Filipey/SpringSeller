@@ -1,4 +1,4 @@
-package springseller.webservice.api;
+package springseller.webservice.api.security;
 
 import lombok.Getter;
 

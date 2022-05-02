@@ -5,7 +5,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import springseller.webservice.api.ApiErrors;
+import springseller.webservice.api.security.ApiErrors;
 import springseller.webservice.api.exception.*;
 
 import java.util.List;
