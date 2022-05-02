@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import springseller.filipey.domain.enums.RoleType;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -18,11 +19,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        super.configure(auth);
+        auth.inMemoryAuthentication()
+                .passwordEncoder(passwordEncoder())
+                .withUser("filipe")
+                .password(passwordEncoder().encode("123"))
+                .roles(RoleType.ADMINISTRATOR.name());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                    .antMatchers("/api/v1/clients/**")
+                        .hasAnyRole(RoleType.USER.name(), RoleType.ADMINISTRATOR.name())
+                    .antMatchers("/api/v1/requests/**")
+                        .hasAnyRole(RoleType.USER.name(), RoleType.ADMINISTRATOR.name())
+                    .antMatchers("/api/v1/products/**")
+                        .hasAnyRole(RoleType.ADMINISTRATOR.name())
+                .and()
+                    .httpBasic();
     }
 }
