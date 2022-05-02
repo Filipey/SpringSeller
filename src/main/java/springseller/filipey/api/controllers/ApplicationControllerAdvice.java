@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import springseller.filipey.api.ApiErrors;
-import springseller.filipey.api.exception.ClientNotFoundException;
-import springseller.filipey.api.exception.ObjectNotFoundException;
-import springseller.filipey.api.exception.ProductNotFoundException;
-import springseller.filipey.api.exception.RequestNotFoundException;
+import springseller.filipey.api.exception.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,4 +48,5 @@ public class ApplicationControllerAdvice {
 
         return new ApiErrors(errors);
     }
+
 }
