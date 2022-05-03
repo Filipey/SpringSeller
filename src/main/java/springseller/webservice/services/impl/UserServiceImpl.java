@@ -1,6 +1,7 @@
 package springseller.webservice.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -8,6 +9,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import springseller.webservice.api.dto.UserCredentialsDTO;
+import springseller.webservice.api.dto.UserTokenDTO;
+import springseller.webservice.api.exception.InvalidPasswordException;
+import springseller.webservice.api.security.jwt.JwtService;
 import springseller.webservice.domain.enums.RoleType;
 import springseller.webservice.repositories.UserRepository;
 
@@ -19,6 +25,9 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -44,5 +53,36 @@ public class UserServiceImpl implements UserDetailsService {
         user.setPassword(cryptoPassword);
 
         return userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserDetails authenticate(springseller.webservice.domain.User user) {
+        UserDetails userDetails = loadUserByUsername(user.getLogin());
+
+        boolean isPasswordsValid =  passwordEncoder.matches(user.getPassword(), userDetails.getPassword());
+
+        if (isPasswordsValid) {
+            return userDetails;
+        }
+
+        throw new InvalidPasswordException();
+    }
+
+    public UserTokenDTO insert(UserCredentialsDTO dto) {
+        try {
+            springseller.webservice.domain.User user = springseller.webservice.domain.User.builder()
+                    .login(dto.getLogin())
+                    .password(dto.getPassword())
+                    .build();
+
+            UserDetails authenticatedUser = authenticate(user);
+
+            String token = jwtService.generateToken(user);
+
+            return new UserTokenDTO(authenticatedUser.getUsername(), token);
+
+        } catch (UsernameNotFoundException | InvalidPasswordException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
     }
 }
