@@ -1,5 +1,7 @@
 package springseller.webservice.api.security.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,11 +32,39 @@ public class JwtService {
         Date date = Date.from(instant);
 
         return Jwts
-                    .builder()
-                    .setSubject(user.getLogin())
-                    .setExpiration(date)
-                    .signWith(SignatureAlgorithm.HS512, subscriptionKey)
-                    .compact();
+                .builder()
+                .setSubject(user.getLogin())
+                .setExpiration(date)
+                .signWith(SignatureAlgorithm.HS512, subscriptionKey)
+                .compact();
 
+    }
+
+    private Claims getClaims(String token) throws ExpiredJwtException {
+        return Jwts
+                .parser()
+                .setSigningKey(subscriptionKey)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            Claims claims = getClaims(token);
+
+            Date expirationDate = claims.getExpiration();
+
+            LocalDateTime localDateTime = expirationDate.toInstant()
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+            return !LocalDateTime.now().isAfter(localDateTime);
+
+        }catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String getUserLogin(String token) throws ExpiredJwtException{
+        return (String) getClaims(token).getSubject();
     }
 }
