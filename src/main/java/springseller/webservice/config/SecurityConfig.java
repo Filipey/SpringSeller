@@ -54,12 +54,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .hasAnyRole(RoleType.USER.name(), RoleType.ADMINISTRATOR.name())
                     .antMatchers("/api/v1/products/**")
                         .hasAnyRole(RoleType.ADMINISTRATOR.name())
-                    .antMatchers(HttpMethod.POST,"/api/v1/users")
+                    .antMatchers(HttpMethod.POST,"/api/v1/users/**")
                         .permitAll()
                     .anyRequest()
                         .authenticated()
                 .and()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
     }
