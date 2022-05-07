@@ -43,8 +43,8 @@ As seguintes ferramentas foram usadas na construção do projeto:
 
 
 - [Swagger](https://swagger.io) Em fase de implementação 🤯
-- [MySql](https://dev.mysql.com/doc/) Em fase de implementação 🤯
-- [Spring Security](https://spring.io/projects/spring-security) Em fase de implementação 🤯
+- [MySql](https://dev.mysql.com/doc/)
+- [Spring Security](https://spring.io/projects/spring-security)
 - [Docker](https://docs.docker.com) Em fase de implementação 🤯
 
 
