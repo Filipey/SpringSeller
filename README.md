@@ -26,8 +26,11 @@ $ cd SpringSeller
 # Instale as dependências
 $ pom.xml -> load maven changes
 
+# Compile em modo de desenvolvimento
+$ mvn clean package -P development
+
 # Execute a aplicação
-$ SpringSellerApplication -> run
+$ java -jar .\SpringSeller-1.0-SNAPSHOT.jar
 
 # O servidor inciará na porta:8080
 ```
