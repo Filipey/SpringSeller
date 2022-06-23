@@ -48,7 +48,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - [Swagger](https://swagger.io)
 - [MySql](https://dev.mysql.com/doc/)
 - [Spring Security](https://spring.io/projects/spring-security)
-- [Docker](https://docs.docker.com) Em fase de implementação 🤯
+- [Docker](https://hub.docker.com/repository/docker/filipeyzi/springseller)
 
 
 ### License
